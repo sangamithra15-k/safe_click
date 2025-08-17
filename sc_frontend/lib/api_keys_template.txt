@@ -1,0 +1,2 @@
+const server ="";
+const openai_key ="";
