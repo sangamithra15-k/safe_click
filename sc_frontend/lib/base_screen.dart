@@ -26,9 +26,11 @@ class _BaseScreenState extends State<BaseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true, // allows nav bar to float over content
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _widgetOptions,
       ),
+
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(20.0), // margin around navbar
         child: ClipRRect(
