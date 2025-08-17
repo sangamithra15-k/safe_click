@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("✅ Registration Successful")),
+          const SnackBar(content: Text("Registration Successful")),
         );
         Navigator.pushReplacement(
           context,
@@ -66,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final error = jsonDecode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text("❌ ${error['error'] ?? 'Registration failed'}")),
+              content: Text("! ${error['error'] ?? 'Registration failed'}")),
         );
       }
     } catch (e) {

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:safe_click/api_keys.dart';
 import 'package:safe_click/base_screen.dart';
 import 'package:safe_click/constant.dart';
 import 'package:safe_click/regis.dart';
@@ -27,48 +31,47 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('email', _emailController.text.trim());
-    await prefs.setString('password', _passwordController.text.trim());
-    print('Saved credentials');
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const BaseScreen()),
-    );
-
-    //  try {
-    //   final response = await http.post(
-    //     Uri.parse('$server/api/login'),
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: jsonEncode({
-    //       'email': _emailController.text.trim(),
-    //       'password': _passwordController.text.trim(),
-    //     }),
-    //   );
-
-    //   if (response.statusCode == 200) {
-    //     final userData = jsonDecode(response.body);
-    //  SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     // await prefs.setString('email', _emailController.text.trim());
     // await prefs.setString('password', _passwordController.text.trim());
-    //
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => BaseScreen()),
-    //     );
-    //   } else {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(content: Text('Login failed: ${response.body}')),
-    //     );
-    //   }
-    // } catch (err) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('An error occurred: $err')),
-    //   );
-    // }
+
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const BaseScreen()),
+    // );
+
+    try {
+      final response = await http.post(
+        Uri.parse('$server/api/login'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': _emailController.text.trim(),
+          'password': _passwordController.text.trim(),
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final userData = jsonDecode(response.body);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('email', _emailController.text.trim());
+        await prefs.setString('password', _passwordController.text.trim());
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BaseScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login failed: ${response.body}')),
+        );
+      }
+    } catch (err) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $err')),
+      );
+    }
   }
 
   @override
