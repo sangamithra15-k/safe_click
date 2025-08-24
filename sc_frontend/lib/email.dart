@@ -13,11 +13,19 @@ Future<Map<String, dynamic>> detectPhishing(String inputText) async {
   final url = Uri.parse('https://openrouter.ai/api/v1/chat/completions');
 
   final prompt = '''
-You are an AI assistant that detects phishing attempts in emails or the given URL is a phishing site or not safe. 
-For the input below:
-- Respond in strict JSON: { "isphishing": true/false, "text": "explain why" }
-- If phishing indicators are present, set isphishing to true and explain your reasoning.
-- If safe, set isphishing to false and explain why.
+You are an AI assistant that detects phishing attempts in either:
+1. The body of an email, or
+2. A given URL.
+
+Instructions:
+- Always respond in strict JSON format:
+  { "isphishing": true/false, "text": "explain why" }
+
+Rules:
+- If the input shows phishing indicators (e.g., suspicious links, urgent language, requests for credentials, mismatched domains, obfuscated text, unsafe URLs), set "isphishing" to true and explain clearly why.
+- If the input looks safe, set "isphishing" to false and explain why it does not appear malicious.
+- Do not output anything outside the JSON object.
+
 Input: "$inputText"
 ''';
 
